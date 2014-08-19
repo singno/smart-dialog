@@ -1,0 +1,175 @@
+.smart-dialog-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  filter: alpha(opacity=0);
+  opacity: 0;
+}
+
+.smart-dialog-loading {
+  display: block;
+  background-image: url(./img/ajax-loader.gif);
+  height: 32px;
+  background-position-x: center;
+  background-repeat: no-repeat;
+  margin: 5px 0;
+  width: 32px;
+  height: 32px;
+}
+
+.smart-dialog-backdrop-opacity {
+  filter: alpha(opacity=50);
+  opacity: 0.5;
+}
+
+.smart-dialog {
+  font-family: Helvetica, Tahoma, Arial, STXihei, "华文细黑", "Microsoft YaHei", "微软雅黑", SimSun, "宋体", Heiti, "黑体", sans-serif;
+  position: fixed;
+  _position: absolute;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+  transition-property: top, left, right, bottom, opacity;
+  transition-timing-function: ease-in;
+  transition-duration: 0.5s;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  background-color: #fff;
+  overflow: hidden;
+  line-height: 1;
+  color: #000;
+}
+
+.smart-dialog-body {
+  overflow: hidden;
+}
+
+.smart-dialog-animate {
+  transition-property: top, opacity;
+}
+
+.smart-dialog-title {
+  padding: 10px 15px;
+  font-size: 14px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.smart-dialog-content {
+  font-size: 12px;
+  line-height: 1.5em;
+  border-top: 1px solid #ddd;
+  padding: 30px;
+  padding-left: 80px;
+  position: relative;
+  min-width: 240px;
+}
+
+.smart-dialog-notitle .smart-dialog-content {
+  border-top: none;
+}
+
+.smart-dialog-noicon {
+  padding-left: 30px;
+}
+
+.smart-dialog-icon {
+  font-size: 0;
+  background: url("img/icons-sprite-24.png") no-repeat -5px -5px;
+  width: 40px;
+  height: 40px;
+  display: block;
+  top: 50%;
+  margin-top: -20px;
+  left: 30px;
+  _left: -50px;
+  position: absolute;
+}
+
+.smart-dialog-icon-png8 {
+  background-image: url("img/icons-sprite.png"); 
+}
+
+.smart-dialog-icon-information .smart-dialog-icon {
+  background-position-x: -5px;
+}
+
+.smart-dialog-icon-question .smart-dialog-icon {
+  background-position-x: -50px;
+}
+
+.smart-dialog-icon-error .smart-dialog-icon {
+  background-position-x: -95px;
+}
+
+.smart-dialog-icon-warn .smart-dialog-icon {
+  background-position-x: -140px;
+}
+
+.smart-dialog-icon-ok .smart-dialog-icon {
+  background-position-x: -185px;
+}
+
+.smart-dialog-close{
+  position: absolute;
+  top: 6px;
+  right: 15px;
+  text-decoration: none;
+  color: #999;
+  font-family: arial, sans-serif;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.smart-dialog-notitle .smart-dialog-close {
+  top: 3px;
+  right: 10px;
+}
+
+.smart-dialog-close:hover {
+  color: #555;
+  text-decoration: none;
+}
+
+.smart-dialog-btns {
+  display: block;
+  border-top: 1px solid #ddd;
+  padding: 10px 15px;
+  text-align: right;
+}
+
+.smart-dialog-btn {
+  text-decoration: none;
+  margin: 0 0 0 5px;
+  padding: 6px 12px;
+  color: #000;
+  border-radius: 3px;
+  font-size: 12px;
+  border: 1px solid #ccc;
+  display: inline-block;
+}
+
+.smart-dialog-btn:hover {
+  text-decoration: none;
+  background-color: #ebebeb;
+  border-color: #adadad;
+}
+
+.smart-dialog-btn-primary {
+  background-color: #428bca;
+  border-color: #357ebd;
+  color: #fff;
+}
+
+.smart-dialog-btn-primary:hover {
+  background-color: #3276b1; 
+  border-color: #285e8e;
+}
+
+.smart-dialog-hide {
+  display: none;
+}
