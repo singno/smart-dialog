@@ -27,8 +27,10 @@
 	    var called = false, 
 	    	$el = this;
 
-	    this.one($.support.transition.end, function () { 
-	    	called = true; 
+	    this.one($.support.transition.end, function (ev) {
+	    	if (this === ev.target) {
+	    		called = true; 
+	    	}
 	    });
 
 	    var callback = function () { 
@@ -96,7 +98,10 @@
 		 * 	  src: 'http://www.example.com/smart-dialog.html'
 		 * }
 		 */
-		source: null,
+		source: {
+			width: 'auto',
+			height: 'auto'
+		},
 
 		startZIndex: 999
 	};
@@ -286,10 +291,11 @@
 		  		this.bindBtn();
 		  	} 
 
+		  	this.loadSource();
+
 		  	this.setRootCss();
 		  	this.setContentCss();
 		  	this.setTitleCss();
-		  	this.loadSource();
 
 		  	this.$root.on('click.dismiss.smart-dialog', '.smart-dialog-close', $.proxy(this.close, this));	
 		  	this.$root.on('click.dismiss.smart-dialog', '[data-smart-dialog-trigger]', $.proxy(this.bindTriggerEvent, this));
@@ -301,39 +307,49 @@
 			var self = this,
 				source = this.options.source;
 
-			if (source) {
-		  		switch (source.type) {
-		  			case 'ajax':
-		  				$.get(source.src)
-		  				.done(function (html) {
-		  					self.$text.append($(html));
-		  					self.position('auto');
-		  					self.internalTrigger('ajaxload');
-		  				})
-		  				.fail(function () {
-		  					self.internalTrigger('ajaxfail');
-		  				});			
-		  				break;
-		  			case 'iframe':
-		  				var tpl = '<iframe src={src} width="{width}" height="{height}" frameborder=0 />';
-		  				this.iframeData = source.data;
-		  				this.$iframe = $(format(tpl, {
-		  					src: source.src,
-		  					width: source.width || '',
-		  					height: source.height || ''
-		  				}))
-		  				.on('load', function () {
-		  					self.adaptIframe();
-		  					self.internalTrigger(self.Event('iframeload', {
-		  						target: this
-		  					}));
-		  				})
-		  				.appendTo(self.$text);
-		  				break;
-		  			default:
-		  				break;
-		  		}
-		  	}
+			if (!source) {
+				return ;
+			}			
+
+			switch (source.type) {
+	  			case 'ajax':
+	  				$.get(source.src)
+	  				.done(function (html) {
+	  					self.$text.append($(html));
+	  					self.position('auto');
+	  					self.internalTrigger('ajaxload');
+	  				})
+	  				.fail(function () {
+	  					self.internalTrigger('ajaxfail');
+	  				});			
+	  				break;
+	  			case 'iframe':
+	  				var contentCss = this.options.contentCss;
+
+	  				if (contentCss && contentCss.padding == 0) {
+	  					width = this.options.width;
+	  					height = this.options.height;
+	  				}
+
+	  				var tpl = '<iframe src={src} width="{width}" height="{height}" frameborder=0 />';
+	  				this.iframeData = source.data;
+	  				this.$iframe = $(format(tpl, {
+	  					src: source.src,
+	  					width: source.width || width || '',
+	  					height: source.height || height || ''
+	  				}))
+	  				.on('load', function () {
+	  					self.adaptIframe();
+	  					self.internalTrigger(self.Event('iframeload', {
+	  						target: this
+	  					}));
+	  				})
+	  				.appendTo(self.$text);
+	  				this.$iframe[0].smartDialog = this.wrap();
+	  				break;
+	  			default:
+	  				break;
+	  		}
 		},
 
 		setRootCss: function () {
@@ -503,6 +519,10 @@
 				return this;
 			}
 
+			if (this.status === 'shown') {
+				return ;
+			}
+
 			var self = this;
 
 			this.status = 'shown';
@@ -524,6 +544,10 @@
 			// Just capture event trigger by itself
 			if (ev && ev.target !== this.$root[0]) {
 				return this;
+			}
+
+			if (this.status === 'closed') {
+				return ;
 			}
 
 			var idx = $.inArray(this, smartDialogs);
@@ -578,7 +602,7 @@
 			this.$root.css('opacity', 1);
 
 			$.support.transition && this.options.animation ?
-			this.$root.one(
+			this.$root.on(
 				$.support.transition.end,
 				$.proxy(this.showEnd, this)
 			).emulateTransitionEnd(500)
@@ -620,7 +644,7 @@
 				});
 				this.$backdrop.css('opacity', 0);
 
-				this.$root.one(
+				this.$root.on(
 					$.support.transition.end,
 					$.proxy(this.closeEnd, this) 
 				).emulateTransitionEnd(500);

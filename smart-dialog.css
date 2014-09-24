@@ -157,6 +157,7 @@
   text-decoration: none;
   background-color: #ebebeb;
   border-color: #adadad;
+  color: #000;
 }
 
 .smart-dialog-btn-primary {
@@ -168,6 +169,7 @@
 .smart-dialog-btn-primary:hover {
   background-color: #3276b1; 
   border-color: #285e8e;
+  color: #fff;
 }
 
 .smart-dialog-hide {
