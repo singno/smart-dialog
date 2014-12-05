@@ -48,9 +48,6 @@
 	$(function () {
 	    $.support.transition = transitionEnd();
 	});
-
-	var $test = $('<div></div>').css('backgroundColor', 'rgba(0, 0, 0, 1)');
-	$.support.rgba = !!$test.css('backgroundColor');
 }(jQuery);
 
 +function (window, document, $) {
@@ -83,19 +80,15 @@
 		height: 'auto',
 
 		animation: true,
+		autoCenter: true,
 		fixed: true,
 
-		rootCss: null,
-		contentCss: null,
-		backdropCss: null,
-		titleCss: null,
-
-		// Valid values: ["information", "question", "error", "warn", "ok"]
+		// ["information", "question", "error", "warn", "ok"]
 		icon: null,
 
 		/* {
 		 * 	  type: 'ajax' | 'iframe'
-		 * 	  src: 'http://www.example.com/smart-dialog.html'
+		 * 	  src: 'http://www.example.com/sd.html'
 		 * }
 		 */
 		source: {
@@ -107,24 +100,13 @@
 	};
 
 	function getZIndex () {
-		var $dialogs = $('div.smart-dialog'),
-			zIndex = DEFAULTS.startZIndex,
-			max = 0;
-
-		$dialogs.each(function () {
-			var $this = $(this),
-				zIdx = +$this.css('zIndex') + 1;
-
-			if (zIdx > max) {
-				max = zIdx; 
-			}
-		});
-
-		return Math.max(zIndex, max);
+		return DEFAULTS.startZIndex++;	
 	}
 
+	var backdropCount = -1;
+
 	function hasBackdrop () {
-		return !!$('div.smart-dialog-backdrop').size();
+		return backdropCount > 0;
 	}
 
 	function throttle (func, wait) {
@@ -187,8 +169,6 @@
 		= this.timer
 		= null;
 
-		this.autoPositionState = true;
-
 		// Use for iframe
 		this.iframeData = undefined;
 
@@ -223,60 +203,62 @@
 		},
 
 		dialog: function () {
-			var tpl = '<div class="smart-dialog">' +
-			    	'<div class="smart-dialog-body {titleCls}">' +
-			      		'<div class="smart-dialog-content {iconCls}"><div class="smart-dialog-text">{content}</div></div>' +
+			var tpl = '<div class="sd">' +
+			    	'<div class="sd-body {titleCls}">' +
+			      		'<div class="sd-content {iconCls}"><div class="sd-text">{content}</div></div>' +
 			    	'</div>' +
 			  	'</div>',
-		  		titleCls = this.options.title ? '' : 'smart-dialog-notitle',
-		  		iconCls = this.options.icon ? 'smart-dialog-icon-' + this.options.icon : 'smart-dialog-noicon';
+		  		titleCls = this.options.title ? '' : 'sd-without-title',
+		  		iconCls = this.options.icon ? 'sd-icon-' + this.options.icon : 'sd-without-icon';
 
 		  	this.$root = $(format(tpl, {
 		  		content: this.options.content,
 		  		titleCls: titleCls,
 		  		iconCls: iconCls
-		  	})).hide().appendTo($body); 
+		  	}))
+		  	.addClass(this.options.rootClass)
+		  	.hide().appendTo($body); 
 
 		  	!this.options.fixed && this.$root.css('position', 'absolute');
 
-		  	this.$body = this.$root.find('div.smart-dialog-body');
-		  	this.$content = this.$body.find('div.smart-dialog-content');
-		  	this.$text = this.$content.find('div.smart-dialog-text');
+		  	this.$body = this.$root.find('.sd-body');
+		  	this.$content = this.$body.find('.sd-content');
+		  	this.$text = this.$content.find('.sd-text');
 
 		  	if (this.options.title) {
-		  		this.$title = format('<h3 class="smart-dialog-title">{title}</h3>', {
+		  		this.$title = format('<h3 class="sd-title">{title}</h3>', {
 		  			title: this.options.title	
 		  		});
 		  		this.$body.prepend(this.$title);
 		  	}
 
 		  	if (this.options.closeButton) {
-		  		var $closeBtn = $('<a class="smart-dialog-close" href="javascript:">x</a>');
+		  		var $closeBtn = $('<a class="sd-close" href="javascript:">x</a>');
 		  		this.$body.append($closeBtn);
 		  	}
 
 		  	if (this.options.icon) {
-		  		var $icon = $('<span class="smart-dialog-icon"></span>');
+		  		var $icon = $('<span class="sd-icon"></span>');
 
 		  		if (isIE6) {
-		  			$icon.addClass('smart-dialog-icon-png8');
+		  			$icon.addClass('sd-icon-png8');
 		  		}
 
 		  		this.$content.prepend($icon);
 		  	}
 
 		  	// if (this.options.content === '') {
-		  	// 	this.$text.append($('<span class="smart-dialog-loading"></span>'));
+		  	// 	this.$text.append($('<span class="sd-loading"></span>'));
 		  	// }
 
 		  	if (this.options.buttons && this.options.buttons.length) {
-		  		var btnsWrapper = '<div class="smart-dialog-btns">{buttons}</div>',
+		  		var btnsWrapper = '<div class="sd-btns">{buttons}</div>',
 		  			btnsHtml = '';
 
 		  		$.each(this.options.buttons, function (idx, val) {
-		  			var tpl = '<a href="javascript:" class="smart-dialog-btn {btnCls}" data-smart-dialog-trigger="{trigger}">{text}</a>';
+		  			var tpl = '<a href="javascript:" class="sd-btn {btnCls}" data-sd-trigger="{trigger}">{text}</a>';
 		  			var data = $.extend({
-		  				btnCls: val.primary ? 'smart-dialog-btn-primary' : '',
+		  				btnCls: val.primary ? 'sd-btn-primary' : '',
 		  				trigger: val.trigger == null ? '' : val.trigger
 		  			}, val);
 
@@ -291,25 +273,17 @@
 		  		this.bindBtn();
 		  	} 
 
-		  	this.loadSource();
+		  	this.options.source && this.loadSource();
 
-		  	this.setRootCss();
-		  	this.setContentCss();
-		  	this.setTitleCss();
-
-		  	this.$root.on('click.dismiss.smart-dialog', '.smart-dialog-close', $.proxy(this.close, this));	
-		  	this.$root.on('click.dismiss.smart-dialog', '[data-smart-dialog-trigger]', $.proxy(this.bindTriggerEvent, this));
+		  	this.$root.on('click.dismiss.sd', '.sd-close', $.proxy(this.close, this));	
+		  	this.$root.on('click.dismiss.sd', '[data-sd-trigger]', $.proxy(this.bindTriggerEvent, this));
 
 			return this;
 		},	
 
 		loadSource: function () {
 			var self = this,
-				source = this.options.source;
-
-			if (!source) {
-				return ;
-			}			
+				source = this.options.source;		
 
 			switch (source.type) {
 	  			case 'ajax':
@@ -324,19 +298,12 @@
 	  				});			
 	  				break;
 	  			case 'iframe':
-	  				var contentCss = this.options.contentCss;
-
-	  				if (contentCss && contentCss.padding == 0) {
-	  					width = this.options.width;
-	  					height = this.options.height;
-	  				}
-
 	  				var tpl = '<iframe src={src} width="{width}" height="{height}" frameborder=0 />';
 	  				this.iframeData = source.data;
 	  				this.$iframe = $(format(tpl, {
 	  					src: source.src,
-	  					width: source.width || width || '',
-	  					height: source.height || height || ''
+	  					width: source.width || '',
+	  					height: source.height || ''
 	  				}))
 	  				.on('load', function () {
 	  					self.adaptIframe();
@@ -352,72 +319,8 @@
 	  		}
 		},
 
-		setRootCss: function () {
-			var css = this.options.rootCss;
-
-			if (css == null) {
-				return this;
-			}
-
-			if (typeof css === 'string') {
-				this.$root[0].cssText = css;
-			} else {
-				this.$root.css(css);
-			}
-
-			return this;
-		},
-
-		setContentCss: function () {
-			var css = this.options.contentCss;
-
-			if (css == null) {
-				return this;
-			}
-
-			if (typeof css === 'string') {
-				this.$content[0].cssText = css;
-			} else {
-				this.$content.css(css);
-			}
-
-			return this;
-		},
-
-		setTitleCss: function () {
-			var css = this.options.titleCss;
-
-			if (css == null) {
-				return this;
-			}
-
-			if (typeof css === 'string') {
-				this.$title[0].cssText = css;
-			} else {
-				this.$title.css(css);
-			}
-
-			return this;
-		},
-
-		setBackdropCss: function () {
-			var css = this.options.backdropCss;
-
-			if (css == null) {
-				return this;
-			}
-
-			if (typeof css === 'string') {
-				this.$backdrop[0].cssText = css;
-			} else {
-				this.$backdrop.css(css);
-			}
-
-			return this;
-		},	
-
 		bindBtn: function () {
-			var $btns = this.$btns.find('.smart-dialog-btn'),
+			var $btns = this.$btns.find('.sd-btn'),
 				self = this,
 				wrapper = self.wrap();
 
@@ -465,14 +368,16 @@
 		},
 
 		backdrop: function () {
-			this.$backdrop = $('<div class="smart-dialog-backdrop"></div>')
-			.css('zIndex', this.options.zIndex == null ? getZIndex() : this.options.zIndex);
+			this.$backdrop = $('<div class="sd-backdrop"></div>')
+			.css('zIndex', this.options.zIndex == null ? getZIndex() : this.options.zIndex)
+			.addClass(this.options.backdropClass);
 
 			if (!this.options.backdrop) {
 				return this;
 			}
 
-			this.setBackdropCss();
+			backdropCount++;
+
 			this.$backdrop.hide().appendTo($body);
 
 			if (isIE6) {
@@ -480,7 +385,7 @@
 			}
 
 			if (this.options.backdrop !== 'static') {
-				this.$backdrop.on('click.dismiss.smart-dialog', $.proxy(this.closeByBackdrop, this));
+				this.$backdrop.on('click.dismiss.sd', $.proxy(this.closeByBackdrop, this));
 			}
 
 			return this;
@@ -526,7 +431,7 @@
 			var self = this;
 
 			this.status = 'shown';
-			this.$root.removeClass('smart-dialog-animate');
+			this.$root.removeClass('sd-animate');
 			
 			// make this event async
 			setTimeout(function () {
@@ -549,6 +454,8 @@
 			if (this.status === 'closed') {
 				return ;
 			}
+
+			backdropCount--;
 
 			var idx = $.inArray(this, smartDialogs);
 
@@ -574,15 +481,13 @@
 
 			this.status = 'showing';
 
-			var backdrop = !hasBackdrop();
-
 			this.backdrop();
 			this.dialog();
 
 			this.$root.css('zIndex', +this.$backdrop.css('zIndex') + 1);
 
-			if (backdrop) {
-				this.$backdrop.addClass('smart-dialog-backdrop-opacity');
+			if (!hasBackdrop()) {
+				this.$backdrop.addClass('sd-backdrop-opacity');
 			}
 
 			this.$root.show();
@@ -597,7 +502,7 @@
 				this.fixHeight();
 			}	
 
-			this.$root.addClass('smart-dialog-animate');
+			this.$root.addClass('sd-animate');
 			this.position('auto');
 			this.$root.css('opacity', 1);
 
@@ -633,7 +538,7 @@
 				return this;
 			}
 
-			this.$root.addClass('smart-dialog-animate');
+			this.$root.addClass('sd-animate');
 
 			this.status = 'closing';
 
@@ -687,7 +592,7 @@
 			}
 
 			if (x === 'auto') {
-				if (this.autoPositionState) {
+				if (this.options.autoCenter) {
 					var center = this.getCenterXY(),
 						x = this.options.left,
 						y = this.options.top;
@@ -839,18 +744,16 @@
 			}
 		},
 
-		root: function () {
+		domRootElement: function () {
 			return this.$root[0];
 		},
 
-		animate: function (flag) {
-			this.options.animation = !!flag;
-			return this;
-		},
-
-		autoPosition: function (flag) {
-			this.autoPositionState = !!flag;
-			return this;
+		changeSettings: function () {
+			if (arguments.length === 2) {
+				this.options[arguments[0]] = arguments[1];
+			} else {
+				$.extend(this.options, arguments[0]);
+			}
 		}	
 	};
 
@@ -860,9 +763,9 @@
 
 	Wrapper.cache = {};
 
-	$.each(['show', 'close', 'center', 'position', 'on', 'ontrigger',
-	 		'size', 'content', 'title', 'adaptIframe', 'data', 'status', 'root',
-	 		'animate', 'autoPosition'], function (idx, val) {
+	$.each(['close', 'center', 'position', 'on', 'ontrigger',
+	 		'size', 'content', 'title', 'adaptIframe', 'data',
+	 		'status', 'domRootElement', 'changeSettings'], function (idx, val) {
 
 		Wrapper.prototype[val] = function () {
 			var dialog = Wrapper.cache[this.uid],
@@ -895,7 +798,7 @@
 
 	var smartDialogs = [];
 
-	$document.on('keyup.dismiss.smart-dialog', function (ev) {
+	$document.on('keyup.dismiss.sd', function (ev) {
 		if (ev.which !== 27) {
 			return ;
 		}
@@ -904,7 +807,7 @@
 		dialog instanceof SmartDialog && dialog.options.keyboard && dialog.close();
 	});
 
-	$window.on('resize.smart-dialog', throttle(function (ev) {
+	$window.on('resize.sd', throttle(function (ev) {
 		$.each(smartDialogs, function (idx, d) {
 			d.position('auto');
 			if (isIE6) {
@@ -915,7 +818,7 @@
 	
 	// IE6 scroll fixed
 	if (isIE6) {
-		$window.on('scroll.smart-dialog', throttle(function (ev) {
+		$window.on('scroll.sd', throttle(function (ev) {
 			$.each(smartDialogs, function (idx, d) {
 				d.options.fixed && d.position('auto');
 			});
@@ -935,22 +838,8 @@
 			closeButton: false,
 			backdrop: false,
 			buttons: null,
-			contentCss: {
-				textAlign: 'center',
-				padding: '10px 20px',
-				color: '#fff',
-				minWidth: 0
-			},
-			rootCss: {
-				backgroundColor: 'rgba(0, 0, 0, 0.7)',
-				border: 'none'
-			}
+			rootClass: 'tips'
 		};
-
-		// If not support RGBA color mode, degrade to gray color
-		if (!$.support.rgba) {
-			option.rootCss.backgroundColor = '#4c4c4c';
-		}
 
 		if (autoClose !== false) {
 			autoClose += 0;
@@ -1011,7 +900,7 @@
 		});
 	};
 
-	$.smartDialog.bare = function (option) {
+	$.smartDialog.original = function (option) {
 		if (typeof option === 'string') {
 			option = {
 				content: option
@@ -1021,13 +910,7 @@
 		return $.smartDialog($.extend({
 			closeButton: false,
 			buttons: null,
-			contentCss: {
-				padding: 0
-			},
-			rootCss: {
-				border: 0,
-				backgroundColor: 'transparent'
-			}
+			rootClass: 'original'
 		}, option));
 	};
 }(window, document, jQuery);
