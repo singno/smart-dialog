@@ -1,135 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>smart-dialog demo</title>
 	<meta charset="utf-8" />
-	<link rel="stylesheet" href="smart-dialog.css" />
-	<style>
-		a {
-			text-decoration: none;
-			color: #006DCC;
-		}
-
-		ul {
-			margin-top: 10px;
-			margin-left: 40px;
-			list-style-type: disc;
-			color: #006DCC;
-		}
-
-		li {
-			margin-bottom: 5px;
-		}
-	</style>
-</head>
-<body>
-	<div>
-	<ul>
-		<li>
-			<a href="javascript:" data-toggle="smart-dialog"  data-content="网络繁忙，请稍后再试～">default</a>
-		</li>
-		<li>
-			<a href="javascript:" data-toggle="smart-dialog" data-content="这是很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长的文字" data-title="温馨提醒" data-keyboard="false" >keyboard=false</a>
-		</li>
-		<li>
-			<a href="javascript:" data-toggle="smart-dialog" data-backdrop="static">backdrop="static"</a>
-		</li>
-		<li>
-			<a href="javascript:" data-toggle="smart-dialog" data-content="Simple is beauty.<br />Is it right?" data-backdrop="false">backdrop=false</a>
-		</li>
-		<li>
-			<a href="javascript:" data-toggle="smart-dialog" data-content="这是很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长的文字" data-title="温馨提醒">Set Title</a>
-		</li>
-		<li>
-			<a href="javascript:" data-toggle="smart-dialog" data-content="这是很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长的文字" data-title="温馨提醒" data-position-x="100" data-position-y="100">Specify Position</a>
-		</li>
-		<li>
-			<a href="javascript:" data-toggle="smart-dialog" data-content="这是很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长的文字" data-title="温馨提醒" data-buttons="null">No Button</a>
-		</li>
-		<li>
-			<a href="javascript:" data-toggle="smart-dialog" data-content="这是很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长的文字" data-buttons="null">No Button And No Title</a>
-		</li>
-		<li>
-			<a href="javascript:" data-toggle="smart-dialog" data-content="这是很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长的文字" data-title="温馨提醒" data-auto-close="1000"  >Auto Close</a>
-		</li>
-		<li>
-			<a href="javascript:" data-toggle="smart-dialog" data-close-button="false">No Close Button</a>
-		</li>
-		<li>
-			<a href="javascript:" id="primary-button">Primary Button</a>
-		</li>
-		<li>
-			<a href="javascript:" id="twice">Popup Twice</a>
-		</li>
-		<li>
-			<a href="javascript:" id="second">Second Time Has No Backdrop</a>
-		</li>
-		<li>
-			<a href="javascript:" id="many-buttons" data-title="温馨提示">Many Buttons</a>
-		</li>
-		<li>
-			<a href="javascript:" data-toggle="smart-dialog" data-width="400px" data-height="300px">Specify Width Height</a>
-		</li>
-		<li>
-			<a href="javascript:" data-toggle="smart-dialog" data-width="400px" data-title="温馨提示" data-height="300px">Specify Width Height With Title</a>
-		</li>
-		<li>
-			<a href="javascript:" data-toggle="smart-dialog" data-width="400px" data-title="温馨提示" data-buttons="null" data-height="300px">Specify Width Height Without Buttons</a>
-		</li>
-		<li>
-			<a href="javascript:" data-toggle="smart-dialog" data-width="400px" data-buttons="null" data-height="300px">Specify Width Height Without Title And Buttons</a>
-		</li>
-		<li>
-			<a href='javascript:' data-toggle="smart-dialog" data-icon="">No Icon</a>
-		</li>
-		<li>
-			<a href='javascript:' data-toggle="smart-dialog" data-icon="infomation">Infomation</a>
-		</li>
-		<li>
-			<a href='javascript:' data-toggle="smart-dialog" data-icon="question">Question</a>
-		</li>
-		<li>
-			<a href='javascript:' data-toggle="smart-dialog" data-icon="error">Error</a>
-		</li>
-		<li>
-			<a href='javascript:' data-toggle="smart-dialog" data-icon="warn">Warn</a>
-		</li>
-		<li>
-			<a href='javascript:' data-toggle="smart-dialog" data-icon="ok">Ok</a>
-		</li>
-		<li>
-			<a href='javascript:' id="tips">3行文字tips</a>
-			<a href='javascript:' id="tips1">1行文字tips</a>
-		</li>
-		<li>
-			<a href="javascript:" data-toggle="choose" data-type="warn">warn</a>
-		</li>
-		<li>
-			<a href="javascript:" data-toggle="choose" data-type="ok">ok</a>
-		</li>
-		<li>
-			<a href="javascript:" data-toggle="choose" data-type="confirm">confirm</a>
-		</li>
-		<li>
-			<a href="javascript:" data-toggle="choose" data-type="info">info</a>
-		</li>
-		<li>
-			<a href="javascript:" data-toggle="choose" data-type="error">error</a>
-		</li>
-		<li>
-			<a href="javascript:" id="set-content">Set Content And Title</a>
-		</li>
-		<li>
-			<a href="javascript:" id="bare">Bare</a>
-		</li>
-		<li>
-			<a href="javascript:" id="iframe">Iframe</a>
-		</li>
-		<li>
-			<a href="javascript:" onclick="loading();return false;">loading</a>
-		</li>
-	</ul>
-	</div>
+	<title>smart dialog demo</title>
+	<link rel="stylesheet" href="dist/css/smart-dialog.css" />
+	
 	<script>
 
 /*!
@@ -10442,50 +10317,171 @@ return jQuery;
 }));
 
 	</script>
-	<script src="smart-dialog.js"></script>
+
+<style>
+h1 {
+	font-size: 30px;
+	text-align: center;
+	font-weight: bold;
+	margin: 20px 0;
+	color: #563d7c;
+}
+
+ul {
+	padding: 20px;
+}
+
+li {
+	line-height: 1.5em;
+}
+
+body{
+	font-size: 14px;
+	font-family: arial;
+}
+
+.root {
+	width: 960px;
+	margin: 0 auto;
+}
+
+.link {
+	text-decoration: none;
+	color: #fff;
+	display: inline-block;
+	margin-left: 10px;
+	border: 1px solid #35254d;
+	background-color: #563d7c;
+	padding: 0 5px;
+	font-size: 12px;
+	border-radius: 3px;
+}
+
+.link:hover {
+	text-decoration: underline;
+}
+
+code {
+	margin: 15px 0 40px 0px;
+	padding: 10px;
+	display: block;
+	border: 1px solid #ddd;
+	background-color: #f7f7f9;
+	border-radius: 5px;
+}
+
+</style>
+
+</head>
+<body>
+<div class="root">
+	<h1>Smart dialog示例</h1>
+
+	<ul>
+		<li>1. 只传入'content'参数。<a class="link" href="javascript:" data-toggle="smart-dialog" data-content="网络繁忙，请稍后再试～～">运行</a>
+			<br />
+			<code>$.smartDialog('网络繁忙，请稍后再试～～');</code>
+		</li>
+		<li>2. 同时传入'title'、'content'参数。<a class="link" href="javascript:" data-toggle="smart-dialog" data-content="网络繁忙，请稍后再试～～" data-title="温馨提示">运行</a>
+			<br />
+		<pre>
+<code>$.smartDialog('网络繁忙，请稍后再试～～', {
+	title: '温馨提示'
+});</code></pre>
+		</li>
+		<li>3. 五种运行状态。
+		<a class="link" href="javascript:" data-toggle="five-types" data-type="info">普通信息</a>
+		<a class="link" href="javascript:" data-toggle="five-types" data-type="confirm">确认</a>
+		<a class="link" href="javascript:" data-toggle="five-types" data-type="error">错误</a>
+		<a class="link" href="javascript:" data-toggle="five-types" data-type="warn">警告</a>
+		<a class="link" href="javascript:" data-toggle="five-types" data-type="ok">正确</a>
+		<pre><code>// Five status [ info | confirm | error | warn | ok ]
+$.smartDialog.info('这里请填入你的内容，内容可以是一段html。', '带有icon的弹框');</code></pre>
+		</li>
+		<li>4. 三秒消失的轻提示。<a class="link" href="javascript:" id="tips">运行</a>
+			<br />
+			<code>$.smartDialog.tips('网络繁忙，请稍后再试～～', 3000);</code>
+		</li>
+		<li>5. 支持任意多的按钮并监听按钮事件。<a class="link" href="javascript:" id="many-buttons">运行</a>
+			<br />
+			<pre><code> // 在触发的事件函数中 `return false;` 或 `event.preventDefault();`，将不关闭弹窗。
+$.smartDialog('每一个按钮都有各自的回调函数', {
+	buttons: [{
+		text: '确定',
+		trigger: 'yes',
+		primary: true  // 深颜色弹框
+	}, {
+		text: '取消',
+		trigger: 'cancel'
+	}, {
+		text: '重试',
+		trigger: 'retry'
+	}, {
+		text: '关闭',
+		trigger: 'shut'
+	}],
+	title: '温馨提示'
+}).on({
+	'yes': function () {
+		alert('yes');
+		return false;
+	},
+
+	'cancel': function (ev) {
+		alert('cancel');
+		ev.preventDefault();
+	},
+
+	'retry': function () {
+		alert('retry');
+		return false;
+	},
+
+	'shut': function () {
+		alert('shut');
+	}
+});</code></pre>
+		</li>
+	<li>
+	5. 监听弹框close事件。<a class="link" href="javascript:" id="listen-close">运行</a>
+			<br />
+<pre><code>$('#listen-close').on('click', function () {
+	$.smartDialog('你要关闭我吗？', {
+		buttons: [
+			{
+				text: '关闭'
+			}
+		]})
+	.on('close', function (ev) {
+		alert('弹框准备要关闭');
+	});
+});</code></pre>
+	</li>
+	</ul>
+</div>
+	<script src="./smart-dialog.js"></script>
 	<script>
-	$(document).on('click.smart-dialog', '[data-toggle="smart-dialog"]', function () {
-		var options = $(this).data(),
-			dialog = $.smartDialog(options);
-	});
-
-	$('#primary-button').on('click', function () {
-		$.smartDialog('网络繁忙，请稍后再试～～～', {
-			title: '温馨提示',
-			buttons: [
-				{
-					text: '确定',
-					primary: true
-				}
-			]
+		$(document).on('click.smart-dialog', '[data-toggle="smart-dialog"]', function () {
+			var options = $(this).data(),
+				dialog = $.smartDialog(options);
 		});
-	});
 
-	$('#twice').on('click', function () {
-		$.smartDialog('test1');
-		setTimeout(function () {
-			$.smartDialog('test2');
-		}, 500);
-	});
+		$(document).on('click.smart-dialog', '[data-toggle="five-types"]', function (ev) {
+			var type = $(this).data('type');
 
-	$('#second').on('click', function () {
-		$.smartDialog('baby1');
-		$.smartDialog({
-			content: 'baby2',
-			backdrop: false
+			$.smartDialog[type]('这里请填入你的内容，内容可以是一段html。', '带有icon的弹框');
 		});
-	});
+
+		$('#tips').on('click', function () {
+			$.smartDialog.tips('网络繁忙，请稍后再试～～', 3000);
+		});
 
 	$('#many-buttons').on('click', function () {
 		$.smartDialog('每一个按钮都有各自的回调函数', {
 			buttons: [{
 				text: '确定',
 				trigger: 'yes',
-				primary: true,
-				callback: function (obj) {
-					alert(this);
-					alert(obj.relatedTarget.nodeName);
-				}
+				primary: true
 			}, {
 				text: '取消',
 				trigger: 'cancel'
@@ -10498,7 +10494,7 @@ return jQuery;
 			}],
 
 			title: '温馨提示'
-		}).on({
+		}).ontrigger({
 			'yes': function () {
 				alert('yes');
 				return false;
@@ -10518,92 +10514,20 @@ return jQuery;
 				alert('shut');
 			}
 		});
-
-
 	});
 
-	$('#tips').click(function () {
-		$.smartDialog.tips('这里有3行文字<br />第二行文字<div>第三行文字</div>');
-	});
-
-	$('#tips1').on('click', function () {
-		$.smartDialog.tips('网络繁忙，请稍后再试!', false);
-	});
-
-	$(document).on('click', '[data-toggle="choose"]', function (event) {
-		var $target = $(event.target),
-			type = $target.data('type');
-
-		$.smartDialog[type]('有一个人在路上打电话，打着打着就挂了～～', '温馨提示');
-	});
-
-	$('#set-content').on('click', function () {
-		$.smartDialog({
-			content: '这里要改变的内容',
-			title: '这里是要改变的标题',
+	$('#listen-close').on('click', function () {
+		$.smartDialog('你要关闭我吗？', {
 			buttons: [
 				{
-					text: '改变内容',
-					trigger: 'modifyContent'
-				},
-
-				{
-					text: '改变标题',
-					trigger: 'modifyTitle'
-				},
-
-				{
-					text: '改变按钮',
-					trigger: 'modifyButton'
+					text: '关闭'
 				}
 			]
-		}).on({
-			'modifyContent': function (ev) {
-				var dialog = ev.dialog;
-				dialog.content('你改变了内容～');
-				ev.preventDefault();
-			},
-
-			'modifyTitle': function (ev) {
-				ev.dialog.title('你改变了标题～');
-				ev.preventDefault();
-			},
-
-			'modifyButton': function (ev) {
-				$(ev.relatedTarget).text('我变了~');
-				ev.dialog.position('auto');
-				return false;
-			}
+		})
+		.on('close', function (ev) {
+			alert('弹框准备要关闭');
 		});
 	});
-
-	$('#bare').on('click', function () {
-		$.smartDialog.bare('<div>This is Html snippet.</div>');
-	});
-
-	$('#iframe').on('click', function (ev) {
-		ev.preventDefault();
-	
-		$.smartDialog({
-			source: {
-				type: 'iframe',
-				src: 'http://film.qq.com/vip.html',
-				data: {
-					a: 1,
-					b: 2
-				}
-			}
-		}).on('iframeload', function () {
-			alert('iframe load');
-		});
-	});
-
-	function loading () {
-
-		$.smartDialog({
-			loading: true
-		});
-	}
 	</script>
 </body>
 </html>
