@@ -349,7 +349,7 @@
 	  		e.preventDefault();
 
 	  		var $this = $(e.target),
-	  			trigger = $this.data('smartDialogTrigger'),
+	  			trigger = $this.data('sdTrigger'),
 	  			ev = $.Event();
 
 	  		if (trigger) {
