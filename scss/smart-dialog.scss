@@ -31,11 +31,9 @@
   _position: absolute;
   border-radius: 3px;
   border: 1px solid #ccc;
-  transition-property: top, left, right, bottom, opacity;
+  transition-property: none;
   transition-timing-function: ease-in;
   transition-duration: 0.5s;
-  top: 0;
-  left: 0;
   opacity: 0;
   filter: alpha(opacity=0);
   background-color: #fff;
@@ -48,8 +46,13 @@
   overflow: hidden;
 }
 
-.sd-animate {
+.sd-animate-slide {
+  top: 0;
   transition-property: top, opacity;
+}
+
+.sd-animate-fade {
+  transition-property: opacity;
 }
 
 .sd-title {

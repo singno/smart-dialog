@@ -79,7 +79,7 @@
 		width: 'auto',
 		height: 'auto',
 
-		animation: true,
+		animation: 'slide',
 		autoCenter: true,
 		fixed: true,
 
@@ -431,7 +431,6 @@
 			var self = this;
 
 			this.status = 'shown';
-			this.$root.removeClass('sd-animate');
 			
 			// make this event async
 			setTimeout(function () {
@@ -502,11 +501,14 @@
 				this.fixHeight();
 			}	
 
-			this.$root.addClass('sd-animate');
+			if (this.options.animation !== 'none') {
+				this.$root.addClass('sd-animate-' + this.options.animation);
+			}
+
 			this.position('auto');
 			this.$root.css('opacity', 1);
 
-			$.support.transition && this.options.animation ?
+			$.support.transition && (this.options.animation !== 'none') ?
 			this.$root.on(
 				$.support.transition.end,
 				$.proxy(this.showEnd, this)
@@ -538,15 +540,15 @@
 				return this;
 			}
 
-			this.$root.addClass('sd-animate');
-
 			this.status = 'closing';
 
-			if ($.support.transition && this.options.animation && e !== 'immediate') {
-				this.$root.css({
-					opacity: 0,
-					top: ''
-				});
+			if ($.support.transition && (this.options.animation !== 'none') && e !== 'immediate') {
+				this.$root.css('opacity', 0);
+
+				if (this.options.animation === 'slide') {
+					this.$root.css('top', '');
+				}
+
 				this.$backdrop.css('opacity', 0);
 
 				this.$root.on(
@@ -838,7 +840,8 @@
 			closeButton: false,
 			backdrop: false,
 			buttons: null,
-			rootClass: 'tips'
+			rootClass: 'tips',
+			animation: 'fade'
 		};
 
 		if (autoClose !== false) {
